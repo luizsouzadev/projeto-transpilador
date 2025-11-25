@@ -1,0 +1,31 @@
+namespace Lexico
+{
+	public enum TipoToken
+	{
+		EOF,
+		IDENT,
+		NUM,
+		STRING,
+		ATRIBUICAO,
+		OP_SOMA,
+		OP_SUB,
+		OP_MUL,
+		OP_DIV,
+		OP_IGUAL,
+		OP_DIF,
+		OP_MAIOR,
+		OP_MAIOR_IGUAL,
+		OP_MENOR,
+		OP_MENOR_IGUAL,
+		PAREN_ESQ,
+		PAREN_DIR,
+		CHAVE_ESQ,
+		CHAVE_DIR,
+		PONTO_VIRGULA,
+		VIRGULA,
+		PALAVRA_RESERVADA,
+		COMENTARIO,
+		WHITESPACE,
+		DESCONHECIDO
+	}
+}
