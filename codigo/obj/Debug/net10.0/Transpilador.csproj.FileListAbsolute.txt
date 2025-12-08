@@ -1,0 +1,15 @@
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/bin/Debug/net10.0/Transpilador
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/bin/Debug/net10.0/Transpilador.deps.json
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/bin/Debug/net10.0/Transpilador.runtimeconfig.json
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/bin/Debug/net10.0/Transpilador.dll
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/bin/Debug/net10.0/Transpilador.pdb
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.GeneratedMSBuildEditorConfig.editorconfig
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.AssemblyInfoInputs.cache
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.AssemblyInfo.cs
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.csproj.CoreCompileInputs.cache
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.sourcelink.json
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.dll
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/refint/Transpilador.dll
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.pdb
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/Transpilador.genruntimeconfig.cache
+/Users/luizsouza/programas/faculdade/projeto-transpilador/codigo/obj/Debug/net10.0/ref/Transpilador.dll

@@ -1,0 +1,16 @@
+algoritmo condicional_aninhado
+var idade;
+var resultado;
+inicio
+    idade = 25;
+    se (idade < 18)
+        resultado = 0;
+    senao
+        se (idade < 65)
+            resultado = 1;
+        senao
+            resultado = 2;
+        fim
+    fim
+    escreva("Categoria: ", resultado);
+fim

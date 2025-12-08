@@ -1,0 +1,92 @@
+Gramática Formal do Transpilador Portugol → C#
+================================================
+
+EBNF (Extended Backus-Naur Form)
+
+Programa ::= 'algoritmo' String? DeclVars? 'inicio' ListaInstrucoes 'fim'
+
+DeclVars ::= 'var' ListaIdentificadores
+
+ListaIdentificadores ::= Ident (',' Ident)*
+
+ListaInstrucoes ::= Instrucao*
+
+Instrucao ::= 
+    | Atribuicao ';'
+    | Escreva ';'
+    | Leia ';'
+    | IfInstr
+    | WhileInstr
+    | FuncaoDecl
+    | RetornoInstr ';'
+
+Atribuicao ::= Ident '=' Expressao
+
+Escreva ::= 'escreva' '(' ArgList ')'
+
+Leia ::= 'leia' '(' Ident (',' Ident)* ')'
+
+ArgList ::= Expressao (',' Expressao)*
+
+IfInstr ::= 'se' Expressao ('entao' | 'então') ListaInstrucoes 
+            ('senao' ListaInstrucoes)? 
+            'fim'
+
+WhileInstr ::= 'enquanto' Expressao 'faca' ListaInstrucoes 'fim'
+
+FuncaoDecl ::= 'funcao' Ident '(' ParamList? ')' ListaInstrucoes 'fim'
+
+ParamList ::= Ident (',' Ident)*
+
+RetornoInstr ::= 'retorne' Expressao?
+
+Expressao ::= ExprLogicaOu
+
+ExprLogicaOu ::= ExprLogicaE (('ou' | 'OU') ExprLogicaE)*
+
+ExprLogicaE ::= ExprRelacional (('e' | 'E') ExprRelacional)*
+
+ExprRelacional ::= Aritmetica (RelOp Aritmetica)*
+
+RelOp ::= '==' | '!=' | '<' | '>' | '<=' | '>='
+
+Aritmetica ::= Termo (('+' | '-') Termo)*
+
+Termo ::= Fator (('*' | '/') Fator)*
+
+Fator ::= 
+    | Ident
+    | Numero
+    | String
+    | ('nao' | 'NÃO') Fator
+    | '(' Expressao ')'
+    | ChamadaFuncao
+
+ChamadaFuncao ::= Ident '(' ArgList? ')'
+
+Ident ::= [a-zA-Z_][a-zA-Z0-9_]*
+
+Numero ::= [0-9]+('.'[0-9]+)?
+
+String ::= '"' (~'"' | '\"')* '"'
+
+---
+
+Observações de Precedência:
+- Parênteses, negação (nao/NÃO) — mais alta
+- Multiplicação (*), divisão (/)
+- Adição (+), subtração (-)
+- Operadores relacionais (==, !=, <, >, <=, >=)
+- E lógico (e/E)
+- OU lógico (ou/OU) — mais baixa
+
+Palavras-chave Reservadas:
+algoritmo, var, inicio, fim, escreva, leia, se, entao, então, senao, 
+enquanto, faca, funcao, retorne, e, E, ou, OU, nao, NÃO
+
+Símbolos:
+( ) { } , ; = + - * / > < >= <= == !=
+
+Comentários:
+// comentário de linha
+/* comentário de bloco */

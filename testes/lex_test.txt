@@ -1,5 +1,5 @@
-algoritmo "teste"
-var x
+algoritmo teste
+var x;
 inicio
     x = 10;
     escreva("O valor de x é: ", x);

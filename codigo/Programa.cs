@@ -7,7 +7,8 @@ class Programa
 {
 	static void Main(string[] args)
 	{
-		var caminho = Path.Combine("testes", "lex_test.txt");
+		var caminho = args.Length > 0 ? args[0] : Path.Combine("testes", "lex_test.txt");
+		
 		if (!File.Exists(caminho))
 		{
 			Console.WriteLine($"Arquivo de teste não encontrado: {caminho}");
@@ -26,7 +27,7 @@ class Programa
 
 		// Transpile using simple parser
 		var parser = new Sintatico.AnalisadorSintatico();
-		var corpo = parser.Transpile(texto);
+		var corpo = parser.Transpile(tokens);
 
 		var emissor = new EmissorCSharp();
 		var outPath = Path.Combine("testes","ProgramaTranspilado.cs");
