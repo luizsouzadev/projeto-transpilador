@@ -1,9 +1,0 @@
-algoritmo teste
-var x;
-inicio
-    x = 10;
-    escreva("O valor de x é: ", x);
-    se (x > 5)
-        escreva("x maior que 5");
-    fim
-fim
