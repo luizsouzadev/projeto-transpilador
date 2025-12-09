@@ -64,4 +64,4 @@ run-generated:
 	fi
 
 run-examples:
-	@./scripts/run_examples.sh
+	@bash ./scripts/test_exemplos.sh
