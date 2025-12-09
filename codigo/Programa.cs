@@ -1,13 +1,14 @@
 using System;
 using System.IO;
 using Lexico;
+using Sintatico;
 using Transpilador;
 
 class Programa
 {
 	static void Main(string[] args)
 	{
-		var caminho = args.Length > 0 ? args[0] : Path.Combine("testes", "lex_test.txt");
+		var caminho = args.Length > 0 ? args[0] : Path.Combine("testes", "teste_inteiro.por");
 		
 		if (!File.Exists(caminho))
 		{
@@ -25,13 +26,14 @@ class Programa
 			Console.WriteLine(t);
 		}
 
-		// Transpile using simple parser
-		var parser = new Sintatico.AnalisadorSintatico();
-		var corpo = parser.Transpile(tokens);
+		var parser = new AnalisadorSintatico(tokens);
+		var ast = parser.Analisar();
 
 		var emissor = new EmissorCSharp();
-		var outPath = Path.Combine("testes","ProgramaTranspilado.cs");
-		emissor.SalvarArquivo(outPath, corpo);
+		var inputDir = Path.GetDirectoryName(caminho);
+		var inputFile = Path.GetFileNameWithoutExtension(caminho);
+		var outPath = Path.Combine(inputDir ?? ".", $"{inputFile}.cs");
+		emissor.SalvarArquivo(outPath, ast);
 		Console.WriteLine($"\nArquivo C# gerado em: {outPath}");
 	}
 }

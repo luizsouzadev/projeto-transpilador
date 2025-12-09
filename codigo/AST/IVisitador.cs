@@ -21,5 +21,13 @@ namespace AST
         void Visitar(NoPara no);
         void Visitar(NoRetorne no);
         void Visitar(NoChamadaFuncao no);
+        void Visitar(NoIncremento no);
+        void Visitar(NoEscolha no);
+        void Visitar(NoCaso no);
+        void Visitar(NoPare no);
+        void Visitar(NoFacaEnquanto no);
+        void Visitar(NoAcessoArray no);
+        void Visitar(NoListaInicializacao no);
+        void Visitar(NoAtribuicaoArray no);
     }
 }

@@ -25,14 +25,15 @@ for arquivo in "$EXEMPLOS_DIR"/*.por; do
 		continue
 	fi
 
-	if [ ! -f "$EXEMPLOS_DIR/ProgramaTranspilado.cs" ]; then
+	cs_file="$EXEMPLOS_DIR/${nome}.cs"
+	if [ ! -f "$cs_file" ]; then
 		echo "   ❌ Arquivo C# nao gerado"
 		FALHOU=$((FALHOU + 1))
 		continue
 	fi
 
 	exe="$EXEMPLOS_DIR/${nome}.exe"
-	if mcs -out:"$exe" "$EXEMPLOS_DIR/ProgramaTranspilado.cs" 2>/dev/null; then
+	if mcs -out:"$exe" "$cs_file" 2>/dev/null; then
 		saida=$(mono "$exe" 2>&1 | head -5)
 		echo "   ✅ Passou"
 		echo "   Saida: $(echo "$saida" | head -1)"

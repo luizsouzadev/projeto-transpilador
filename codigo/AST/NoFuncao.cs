@@ -7,10 +7,10 @@ namespace AST
     {
         public string Nome { get; set; }
         public string TipoRetorno { get; set; }
-        public List<Tuple<string, string>> Parametros { get; set; } // (tipo, nome)
+        public List<Tuple<string, string, bool>> Parametros { get; set; } // (tipo, nome, ehReferencia)
         public NoBloco Corpo { get; set; }
 
-        public NoFuncao(string nome, string tipoRetorno, List<Tuple<string, string>> parametros, NoBloco corpo)
+        public NoFuncao(string nome, string tipoRetorno, List<Tuple<string, string, bool>> parametros, NoBloco corpo)
         {
             Nome = nome;
             TipoRetorno = tipoRetorno;

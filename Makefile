@@ -34,7 +34,8 @@ clean:
 	@if command -v dotnet >/dev/null 2>&1; then \
 		dotnet clean $(PROJECT_DIR); \
 	fi
-	rm -f testes/ProgramaTranspilado.cs programa.exe testes/ProgramaTranspilado.exe
+	rm -f testes/*.cs testes/*.exe programa.exe
+	@echo "Limpeza completa: arquivos gerados e compilados removidos"
 
 mcs:
 	@echo "Compilando com mcs (Mono) ...";
@@ -44,7 +45,6 @@ run-mono: mcs
 	@echo "Executando com mono ...";
 	mono programa.exe
 
-# tokenization test: reads testes/lex_test.txt and prints tokens
 test-lex: build
 	@if command -v dotnet >/dev/null 2>&1; then \
 		dotnet run --project $(PROJECT_DIR); \
@@ -52,7 +52,6 @@ test-lex: build
 		$(MAKE) run-mono; \
 	fi
 
-# compile and run the last generated transpilado C# (testes/ProgramaTranspilado.cs)
 run-generated:
 	@if [ -f testes/ProgramaTranspilado.cs ]; then \
 		if command -v mcs >/dev/null 2>&1; then \

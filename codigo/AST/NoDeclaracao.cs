@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace AST
 {
@@ -7,12 +8,14 @@ namespace AST
         public string Nome { get; set; }
         public string Tipo { get; set; }
         public No Inicializacao { get; set; }
+        public List<No> TamanhosArray { get; set; }
 
-        public NoDeclaracao(string nome, string tipo, No inicializacao = null)
+        public NoDeclaracao(string nome, string tipo, No inicializacao = null, List<No> tamanhosArray = null)
         {
             Nome = nome;
             Tipo = tipo;
             Inicializacao = inicializacao;
+            TamanhosArray = tamanhosArray;
         }
 
         public override void Aceitar(IVisitador visitador)

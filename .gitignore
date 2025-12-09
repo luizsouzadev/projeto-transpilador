@@ -1,0 +1,22 @@
+# Arquivos gerados pelo transpilador
+testes/*.cs
+testes/*.exe
+
+# Arquivos compilados do .NET
+bin/
+obj/
+*.dll
+*.pdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporários
+*.tmp
