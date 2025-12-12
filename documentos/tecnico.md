@@ -114,31 +114,32 @@ argumentos      ::= expressao (',' expressao)*
 
 ## 7. Exemplos de conversão
 ```portugol
-// Entrada: Portugol
-função inteiro somar(inteiro a, inteiro b) {
-    retorne a + b
-}
-
-função início() {
+//  Entrada: Portugol
+programa {
+  funcao inicio() {
     inteiro x = 10
     inteiro y = 20
-    inteiro z = somar(x, y)
-    escreva("Soma: ", z, "\n")
+    inteiro soma = x + y
+    
+    escreva("x = ", x, "\n")
+    escreva("y = ", y, "\n")
+    escreva("soma = ", soma, "\n")
+  }
 }
 ```
 
 ```csharp
 // Saída: C#
+using System;
 class Programa {
-    static int somar(int a, int b) {
-        return (a + b);
-    }
-
-    static void Main(string[] args) {
+    static void Main(string[] args)
+    {
         int x = 10;
         int y = 20;
-        int z = somar(x, y);
-        Console.Write("Soma: " + z + "\n");
+        int soma = (x + y);
+        Console.Write("x = " + x + "\n");
+        Console.Write("y = " + y + "\n");
+        Console.Write("soma = " + soma + "\n");
     }
 }
 ```
