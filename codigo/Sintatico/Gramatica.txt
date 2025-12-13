@@ -151,9 +151,6 @@ Palavras-chave Reservadas (case-insensitive):
 programa, funcao, retorne, escreva, leia, se, senao, enquanto, faca, para,
 escolha, caso, contrario, padrao, pare, verdadeiro, falso, nao
 
-Observação: 'entao'/'então' são reconhecidas pelo léxico, mas não fazem parte
-da sintaxe atual (condições de 'se' usam parênteses).
-
 Símbolos:
 ( ) { } [ ] , ; : = + - * / % > < >= <= == != ++ -- &
 
