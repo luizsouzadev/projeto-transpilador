@@ -69,18 +69,20 @@ Padrao ::= 'caso' ('contrario' | 'padrao') ':' BlocoCasos
 
 BlocoCasos ::= InstrucaoCasos*
 
-InstrucaoCasos ::= 
-    | DeclaracaoVar
-    | Escreva
-    | Leia
+Instrucao ::= 
+    | DeclaracaoVar ';'
+    | Escreva ';'
+    | Leia ';'
+    | Retorne ';'
+    | Pare ';'
+    | AtribuicaoOuChamada ';'
     | Se
     | Enquanto
     | FacaEnquanto
     | Para
-    | Retorne
-    | AtribuicaoOuChamada
+    | Escolha
     | Bloco
-    | Pare
+
 
 Pare ::= 'pare'
 

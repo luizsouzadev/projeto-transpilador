@@ -34,63 +34,141 @@ Permitir que programas escritos para ensino (Portugol) sejam convertidos para C#
 
 ## 4. Gramática (EBNF alinhada ao parser atual)
 ```
-programa        ::= 'programa' '{' (declaracao_var | funcao)* '}'
+Programa ::= 'programa' '{' (DeclaracaoVar | FuncaoDecl)* '}'
 
-tipo            ::= 'inteiro' | 'real' | 'logico' | 'caracter' | 'cadeia'
+Tipo ::= 'inteiro' | 'real' | 'logico' | 'caracter' | 'cadeia'
 
-funcao          ::= 'funcao' tipo? IDENT '(' parametros? ')' bloco
-parametros      ::= (tipo '&'? IDENT) (',' tipo '&'? IDENT)*
+DeclaracaoVar ::= Tipo Declarador (',' Declarador)*
 
-bloco           ::= '{' instrucao* '}'
-instrucao       ::= declaracao_var
-                  | escreva
-                  | leia
-                  | se_senao
-                  | enquanto
-                  | para
-                  | faca_enquanto
-                  | escolha
-                  | retorne
-                  | atribuicao_ou_chamada
-                  | pare
-                  | bloco
+Declarador ::= Ident Indices? Inicializacao?
 
-declaracao_var  ::= tipo IDENT ('[' expressao ']')* ( '=' ( lista_inicializacao | expressao ) )? 
-                    (',' IDENT ('[' expressao ']')* ( '=' expressao )? )*
+Indices ::= ('[' Expressao ']')+
 
-lista_inicializacao ::= '{' elemento_init (',' elemento_init)* '}'
-elemento_init   ::= lista_inicializacao | expressao
+Inicializacao ::= '=' (ListaInicializacao | Expressao)
 
-escreva         ::= 'escreva' '(' expressao (',' expressao)* ')'
-leia            ::= 'leia' '(' IDENT (',' IDENT)* ')'
-se_senao        ::= 'se' '(' expressao ')' instrucao ('senao' instrucao)?
-enquanto        ::= 'enquanto' '(' expressao ')' instrucao
-para            ::= 'para' '(' (declaracao_var | atrib_ou_inc) ';' expressao ';' atrib_ou_inc ')' instrucao
-faca_enquanto   ::= 'faca' bloco 'enquanto' '(' expressao ')'
-escolha         ::= 'escolha' '(' expressao ')' '{' (caso | padrao)* '}'
-caso            ::= 'caso' expressao ':' bloco_casos
-padrao          ::= 'caso' ('contrario' | 'padrao') ':' bloco_casos
-bloco_casos     ::= instrucao_casos*
-instrucao_casos ::= declaracao_var | escreva | leia | se_senao | enquanto | para | retorne | atribuicao_ou_chamada | bloco | pare
+ListaInicializacao ::= '{' ElementoInit (',' ElementoInit)* '}'
 
-retorne         ::= 'retorne' expressao?
-atribuicao_ou_chamada ::= IDENT ('[' expressao ']')* ( '=' expressao | '(' argumentos? ')' | '++' | '--' )
-atrib_ou_inc    ::= IDENT ( '=' expressao | '++' | '--' )
-pare            ::= 'pare'
+ElementoInit ::= ListaInicializacao | Expressao
 
-expressao       ::= ou
-ou              ::= e ('ou' e)*
-e               ::= comparacao ('e' comparacao)*
-comparacao      ::= aditiva (op_rel aditiva)*
-op_rel          ::= '==' | '!=' | '<' | '<=' | '>' | '>='
-aditiva         ::= multiplicativa (('+' | '-') multiplicativa)*
-multiplicativa  ::= unaria (('*' | '/' | '%') unaria)*
-unaria          ::= '-' unaria | 'nao' unaria | '++' IDENT | '--' IDENT | primaria
-primaria        ::= NUM | STRING | CARACTER | 'verdadeiro' | 'falso'
-                  | IDENT ('[' expressao ']')* ('(' argumentos? ')')? ('++' | '--')?
-                  | '(' expressao ')'
+FuncaoDecl ::= 'funcao' Tipo? Ident '(' Parametros? ')' Bloco
 
-argumentos      ::= expressao (',' expressao)*
+Parametros ::= Param (',' Param)*
+
+Param ::= Tipo '&'? Ident
+
+Bloco ::= '{' Instrucao* '}'
+
+Instrucao ::= 
+    | DeclaracaoVar ';'
+    | Escreva ';'
+    | Leia ';'
+    | Retorne ';'
+    | Pare ';'
+    | AtribuicaoOuChamada ';'
+    | Se
+    | Enquanto
+    | FacaEnquanto
+    | Para
+    | Escolha
+    | Bloco
+                  
+
+Escreva ::= 'escreva' '(' ArgList ')'
+
+Leia ::= 'leia' '(' Ident (',' Ident)* ')'
+
+ArgList ::= Expressao (',' Expressao)*
+
+Se ::= 'se' '(' Expressao ')' InstrucaoOuBloco ('senao' InstrucaoOuBloco)?
+
+InstrucaoOuBloco ::= Instrucao | Bloco
+
+Enquanto ::= 'enquanto' '(' Expressao ')' InstrucaoOuBloco
+
+FacaEnquanto ::= 'faca' Bloco 'enquanto' '(' Expressao ')'
+
+Para ::= 'para' '(' InicializacaoPara ';' Expressao ';' AtualizacaoPara ')' InstrucaoOuBloco
+
+InicializacaoPara ::= DeclaracaoVar | AtribOuInc
+
+AtualizacaoPara ::= AtribOuInc
+
+Escolha ::= 'escolha' '(' Expressao ')' '{' (Caso | Padrao)* '}'
+
+Caso ::= 'caso' Expressao ':' BlocoCasos
+
+Padrao ::= 'caso' ('contrario' | 'padrao') ':' BlocoCasos
+
+BlocoCasos ::= InstrucaoCasos*
+
+Instrucao ::= 
+    | DeclaracaoVar ';'
+    | Escreva ';'
+    | Leia ';'
+    | Retorne ';'
+    | Pare ';'
+    | AtribuicaoOuChamada ';'
+    | Se
+    | Enquanto
+    | FacaEnquanto
+    | Para
+    | Escolha
+    | Bloco
+
+Pare ::= 'pare'
+
+Retorne ::= 'retorne' Expressao?
+
+AtribuicaoOuChamada ::= 
+    | Ident Indices? '=' Expressao
+    | Ident '(' ArgList? ')'
+    | Ident ('++' | '--')
+
+AtribOuInc ::= 
+    | Ident '=' Expressao
+    | Ident ('++' | '--')
+
+Expressao ::= ExprOu
+
+ExprOu ::= ExprE ('ou' ExprE)*
+
+ExprE ::= ExprRel ('e' ExprRel)*
+
+ExprRel ::= ExprAdd (RelOp ExprAdd)*
+
+RelOp ::= '==' | '!=' | '<' | '>' | '<=' | '>='
+
+ExprAdd ::= ExprMul (('+' | '-') ExprMul)*
+
+ExprMul ::= ExprUn (('*' | '/' | '%') ExprUn)*
+
+ExprUn ::= 
+    | '-' ExprUn
+    | 'nao' ExprUn
+    | '++' Ident
+    | '--' Ident
+    | Primaria
+
+Primaria ::= 
+    | '(' Expressao ')'
+    | Numero
+    | Caracter
+    | String
+    | ('verdadeiro' | 'falso')
+    | Ident Sufixo?
+
+Sufixo ::= 
+    | Indices
+    | '(' ArgList? ')'
+    | ('++' | '--')
+
+Ident ::= [A-Za-z_][A-Za-z0-9_]*
+
+Numero ::= [0-9]+('.'[0-9]+)?
+
+Caracter ::= '\'' (\\.|[^'\n]) '\''
+
+String ::= '"' (\\.|[^"\n])* '"'
 ```
 
 ### Observações
@@ -114,7 +192,7 @@ argumentos      ::= expressao (',' expressao)*
 
 ## 6. Transformações principais do emissor
 - **Função `início()`** → `static void Main(string[] args)`
-- **Operadores lógicos** → `e` → `&&`, `ou` → `||`, `nao` → `!=` (XOR)
+- **Operadores lógicos** → `e` → `&&`, `ou` → `||`, `nao` → `!`
 - **Booleanos** → `verdadeiro` → `true`, `falso` → `false`
 - **Arrays multidimensionais** → Sintaxe C# nativa `[,]` com índices separados por vírgula
 - **Palavras-chave** → Escapadas com `@` quando necessário (ex: `@decimal`)
