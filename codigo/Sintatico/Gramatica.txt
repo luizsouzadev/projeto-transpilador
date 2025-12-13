@@ -1,26 +1,45 @@
 Gramática Formal do Transpilador Portugol → C#
 ================================================
 
-EBNF (Extended Backus-Naur Form)
+EBNF (Extended Backus-Naur Form) alinhada ao léxico e sintático atuais
 
-Programa ::= 'algoritmo' String? DeclVars? 'inicio' ListaInstrucoes 'fim'
+Programa ::= 'programa' '{' (DeclaracaoVar | FuncaoDecl)* '}'
 
-DeclVars ::= 'var' ListaIdentificadores
+Tipo ::= 'inteiro' | 'real' | 'logico' | 'caracter' | 'cadeia'
 
-ListaIdentificadores ::= Ident (',' Ident)*
+DeclaracaoVar ::= Tipo Declarador (',' Declarador)*
 
-ListaInstrucoes ::= Instrucao*
+Declarador ::= Ident Indices? Inicializacao?
+
+Indices ::= ('[' Expressao ']')+
+
+Inicializacao ::= '=' (ListaInicializacao | Expressao)
+
+ListaInicializacao ::= '{' ElementoInit (',' ElementoInit)* '}'
+
+ElementoInit ::= ListaInicializacao | Expressao
+
+FuncaoDecl ::= 'funcao' Tipo? Ident '(' Parametros? ')' Bloco
+
+Parametros ::= Param (',' Param)*
+
+Param ::= Tipo '&'? Ident
+
+Bloco ::= '{' Instrucao* '}'
 
 Instrucao ::= 
-    | Atribuicao ';'
-    | Escreva ';'
-    | Leia ';'
-    | IfInstr
-    | WhileInstr
-    | FuncaoDecl
-    | RetornoInstr ';'
-
-Atribuicao ::= Ident '=' Expressao
+    | DeclaracaoVar                 
+    | Escreva                       
+    | Leia                          
+    | Se                            
+    | Enquanto                      
+    | FacaEnquanto                  
+    | Para                          
+    | Escolha                       
+    | Retorne                       
+    | Pare                          
+    | AtribuicaoOuChamada           
+    | Bloco                         
 
 Escreva ::= 'escreva' '(' ArgList ')'
 
@@ -28,64 +47,115 @@ Leia ::= 'leia' '(' Ident (',' Ident)* ')'
 
 ArgList ::= Expressao (',' Expressao)*
 
-IfInstr ::= 'se' Expressao ('entao' | 'então') ListaInstrucoes 
-            ('senao' ListaInstrucoes)? 
-            'fim'
+Se ::= 'se' '(' Expressao ')' InstrucaoOuBloco ('senao' InstrucaoOuBloco)?
 
-WhileInstr ::= 'enquanto' Expressao 'faca' ListaInstrucoes 'fim'
+InstrucaoOuBloco ::= Instrucao | Bloco
 
-FuncaoDecl ::= 'funcao' Ident '(' ParamList? ')' ListaInstrucoes 'fim'
+Enquanto ::= 'enquanto' '(' Expressao ')' InstrucaoOuBloco
 
-ParamList ::= Ident (',' Ident)*
+FacaEnquanto ::= 'faca' Bloco 'enquanto' '(' Expressao ')'
 
-RetornoInstr ::= 'retorne' Expressao?
+Para ::= 'para' '(' InicializacaoPara ';' Expressao ';' AtualizacaoPara ')' InstrucaoOuBloco
 
-Expressao ::= ExprLogicaOu
+InicializacaoPara ::= DeclaracaoVar | AtribOuInc
 
-ExprLogicaOu ::= ExprLogicaE (('ou' | 'OU') ExprLogicaE)*
+AtualizacaoPara ::= AtribOuInc
 
-ExprLogicaE ::= ExprRelacional (('e' | 'E') ExprRelacional)*
+Escolha ::= 'escolha' '(' Expressao ')' '{' (Caso | Padrao)* '}'
 
-ExprRelacional ::= Aritmetica (RelOp Aritmetica)*
+Caso ::= 'caso' Expressao ':' BlocoCasos
+
+Padrao ::= 'caso' ('contrario' | 'padrao') ':' BlocoCasos
+
+BlocoCasos ::= InstrucaoCasos*
+
+InstrucaoCasos ::= 
+    | DeclaracaoVar
+    | Escreva
+    | Leia
+    | Se
+    | Enquanto
+    | FacaEnquanto
+    | Para
+    | Retorne
+    | AtribuicaoOuChamada
+    | Bloco
+    | Pare
+
+Pare ::= 'pare'
+
+Retorne ::= 'retorne' Expressao?
+
+AtribuicaoOuChamada ::= 
+    | Ident Indices? '=' Expressao
+    | Ident '(' ArgList? ')'
+    | Ident ('++' | '--')
+
+AtribOuInc ::= 
+    | Ident '=' Expressao
+    | Ident ('++' | '--')
+
+Expressao ::= ExprOu
+
+ExprOu ::= ExprE ('ou' ExprE)*
+
+ExprE ::= ExprRel ('e' ExprRel)*
+
+ExprRel ::= ExprAdd (RelOp ExprAdd)*
 
 RelOp ::= '==' | '!=' | '<' | '>' | '<=' | '>='
 
-Aritmetica ::= Termo (('+' | '-') Termo)*
+ExprAdd ::= ExprMul (('+' | '-') ExprMul)*
 
-Termo ::= Fator (('*' | '/') Fator)*
+ExprMul ::= ExprUn (('*' | '/' | '%') ExprUn)*
 
-Fator ::= 
-    | Ident
-    | Numero
-    | String
-    | ('nao' | 'NÃO') Fator
+ExprUn ::= 
+    | '-' ExprUn
+    | 'nao' ExprUn
+    | '++' Ident
+    | '--' Ident
+    | Primaria
+
+Primaria ::= 
     | '(' Expressao ')'
-    | ChamadaFuncao
+    | Numero
+    | Caracter
+    | String
+    | ('verdadeiro' | 'falso')
+    | Ident Sufixo?
 
-ChamadaFuncao ::= Ident '(' ArgList? ')'
+Sufixo ::= 
+    | Indices
+    | '(' ArgList? ')'
+    | ('++' | '--')
 
-Ident ::= [a-zA-Z_][a-zA-Z0-9_]*
+Ident ::= [A-Za-z_][A-Za-z0-9_]*
 
 Numero ::= [0-9]+('.'[0-9]+)?
 
-String ::= '"' (~'"' | '\"')* '"'
+Caracter ::= '\'' (\\.|[^'\n]) '\''
+
+String ::= '"' (\\.|[^"\n])* '"'
 
 ---
 
 Observações de Precedência:
-- Parênteses, negação (nao/NÃO) — mais alta
-- Multiplicação (*), divisão (/)
+- Parênteses, negação (nao), unário '-', prefixo '++'/'--' — mais alta
+- Multiplicação (*), divisão (/), módulo (%)
 - Adição (+), subtração (-)
 - Operadores relacionais (==, !=, <, >, <=, >=)
-- E lógico (e/E)
-- OU lógico (ou/OU) — mais baixa
+- E lógico (e)
+- OU lógico (ou) — mais baixa
 
-Palavras-chave Reservadas:
-algoritmo, var, inicio, fim, escreva, leia, se, entao, então, senao, 
-enquanto, faca, funcao, retorne, e, E, ou, OU, nao, NÃO
+Palavras-chave Reservadas (case-insensitive):
+programa, funcao, retorne, escreva, leia, se, senao, enquanto, faca, para,
+escolha, caso, contrario, padrao, pare, verdadeiro, falso, nao
+
+Observação: 'entao'/'então' são reconhecidas pelo léxico, mas não fazem parte
+da sintaxe atual (condições de 'se' usam parênteses).
 
 Símbolos:
-( ) { } , ; = + - * / > < >= <= == !=
+( ) { } [ ] , ; : = + - * / % > < >= <= == != ++ -- &
 
 Comentários:
 // comentário de linha

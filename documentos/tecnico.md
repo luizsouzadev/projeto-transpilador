@@ -8,11 +8,11 @@
 Permitir que programas escritos para ensino (Portugol) sejam convertidos para C# sem reescrita manual, servindo como ponte de aprendizagem e aprofundamento de estudos.
 
 ## 3. Tokens suportados (léxico)
-- Tipos: `inteiro`, `real`, `lógico`, `caracter`, `cadeia`
+- Tipos: `inteiro`, `real`, `logico`, `caracter`, `cadeia`
 
-- Palavras-chave: `programa`, `função`, `retorne`, `escreva`, `leia`, `se`, `senão`, `enquanto`, `para`, `faça`, `escolha`, `caso`, `contrário`, `pare`
+- Palavras-chave (case-insensitive): `programa`, `funcao`, `retorne`, `escreva`, `leia`, `se`, `senao`, `enquanto`, `para`, `faca`, `escolha`, `caso`, `contrario`, `padrao`, `pare`
 
-- Operadores lógicos: `e`, `ou`, `não`
+- Operadores lógicos: `e`, `ou`, `nao`
 
 - Booleanos: `verdadeiro`, `falso` (também permitidos como identificadores)
 
@@ -34,41 +34,48 @@ Permitir que programas escritos para ensino (Portugol) sejam convertidos para C#
 
 ## 4. Gramática (EBNF alinhada ao parser atual)
 ```
-programa        ::= 'programa' '{' (funcao)* '}'
-funcao          ::= 'funcao' tipo? IDENT '(' parametros? ')' '{' bloco '}'
+programa        ::= 'programa' '{' (declaracao_var | funcao)* '}'
+
+tipo            ::= 'inteiro' | 'real' | 'logico' | 'caracter' | 'cadeia'
+
+funcao          ::= 'funcao' tipo? IDENT '(' parametros? ')' bloco
 parametros      ::= (tipo '&'? IDENT) (',' tipo '&'? IDENT)*
 
-bloco           ::= instrucao*
-instrucao       ::= declaracao_var ';'
-                  | escreva ';'
-                  | leia ';'
+bloco           ::= '{' instrucao* '}'
+instrucao       ::= declaracao_var
+                  | escreva
+                  | leia
                   | se_senao
                   | enquanto
                   | para
-                  | faca_enquanto ';'
+                  | faca_enquanto
                   | escolha
-                  | retorne ';'
-                  | atribuicao_ou_chamada ';'
-                  | pare ';'
-                  | '{' bloco '}'
+                  | retorne
+                  | atribuicao_ou_chamada
+                  | pare
+                  | bloco
 
-declaracao_var  ::= tipo IDENT ('[' expressao ']')* ('=' ('{' lista_inicializacao '}' | expressao))? 
-                    (',' IDENT ('[' expressao ']')* ('=' expressao)?)*
-tipo            ::= 'inteiro' | 'real' | 'lógico' | 'cadeia' | 'caracter'
+declaracao_var  ::= tipo IDENT ('[' expressao ']')* ( '=' ( lista_inicializacao | expressao ) )? 
+                    (',' IDENT ('[' expressao ']')* ( '=' expressao )? )*
 
-lista_inicializacao ::= ('{' lista_inicializacao '}' | expressao) 
-                        (',' ('{' lista_inicializacao '}' | expressao))*
+lista_inicializacao ::= '{' elemento_init (',' elemento_init)* '}'
+elemento_init   ::= lista_inicializacao | expressao
 
 escreva         ::= 'escreva' '(' expressao (',' expressao)* ')'
 leia            ::= 'leia' '(' IDENT (',' IDENT)* ')'
-se_senao        ::= 'se' '(' expressao ')' instrucao_simples ('senao' instrucao_simples)?
-enquanto        ::= 'enquanto' '(' expressao ')' instrucao_simples
-para            ::= 'para' '(' inicializacao ';' expressao ';' atualizacao ')' instrucao_simples
-faca_enquanto   ::= 'faça' '{' bloco '}' 'enquanto' '(' expressao ')'
-escolha         ::= 'escolha' '(' expressao ')' '{' caso* (contrario ':' bloco)? '}'
-caso            ::= 'caso' valor ':' bloco 'pare'?
+se_senao        ::= 'se' '(' expressao ')' instrucao ('senao' instrucao)?
+enquanto        ::= 'enquanto' '(' expressao ')' instrucao
+para            ::= 'para' '(' (declaracao_var | atrib_ou_inc) ';' expressao ';' atrib_ou_inc ')' instrucao
+faca_enquanto   ::= 'faca' bloco 'enquanto' '(' expressao ')'
+escolha         ::= 'escolha' '(' expressao ')' '{' (caso | padrao)* '}'
+caso            ::= 'caso' expressao ':' bloco_casos
+padrao          ::= 'caso' ('contrario' | 'padrao') ':' bloco_casos
+bloco_casos     ::= instrucao_casos*
+instrucao_casos ::= declaracao_var | escreva | leia | se_senao | enquanto | para | retorne | atribuicao_ou_chamada | bloco | pare
+
 retorne         ::= 'retorne' expressao?
-atribuicao_ou_chamada ::= IDENT ('[' expressao ']')* ('=' expressao | '(' argumentos? ')' | '++' | '--')
+atribuicao_ou_chamada ::= IDENT ('[' expressao ']')* ( '=' expressao | '(' argumentos? ')' | '++' | '--' )
+atrib_ou_inc    ::= IDENT ( '=' expressao | '++' | '--' )
 pare            ::= 'pare'
 
 expressao       ::= ou
@@ -78,7 +85,7 @@ comparacao      ::= aditiva (op_rel aditiva)*
 op_rel          ::= '==' | '!=' | '<' | '<=' | '>' | '>='
 aditiva         ::= multiplicativa (('+' | '-') multiplicativa)*
 multiplicativa  ::= unaria (('*' | '/' | '%') unaria)*
-unaria          ::= '-' unaria | 'não' unaria | primaria
+unaria          ::= '-' unaria | 'nao' unaria | '++' IDENT | '--' IDENT | primaria
 primaria        ::= NUM | STRING | CARACTER | 'verdadeiro' | 'falso'
                   | IDENT ('[' expressao ']')* ('(' argumentos? ')')? ('++' | '--')?
                   | '(' expressao ')'
@@ -87,7 +94,7 @@ argumentos      ::= expressao (',' expressao)*
 ```
 
 ### Observações
-- Para gerar um ponto de entrada, declare `função início() { ... }`; o emissor mapeia `início` para `static void Main(string[] args)`.
+- Para gerar um ponto de entrada, declare `funcao inicio() { ... }`; o emissor mapeia `inicio` para `static void Main(string[] args)` quando não há parâmetros.
 
 - Arrays são suportados com sintaxe `tipo nome[tamanho1][tamanho2]...` com inicialização via `{...}`.
 
@@ -107,7 +114,7 @@ argumentos      ::= expressao (',' expressao)*
 
 ## 6. Transformações principais do emissor
 - **Função `início()`** → `static void Main(string[] args)`
-- **Operadores lógicos** → `e` → `&&`, `ou` → `||`, `não` → `!=` (XOR)
+- **Operadores lógicos** → `e` → `&&`, `ou` → `||`, `nao` → `!=` (XOR)
 - **Booleanos** → `verdadeiro` → `true`, `falso` → `false`
 - **Arrays multidimensionais** → Sintaxe C# nativa `[,]` com índices separados por vírgula
 - **Palavras-chave** → Escapadas com `@` quando necessário (ex: `@decimal`)
